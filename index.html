@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>İnteraktif Okuma Parçası</title>
+<style>
+    /* GENEL STİLLEME */
+    body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        line-height: 1.6;
+        color: #333;
+        /* Jotform arkaplanıyla uyum için arka planı şeffaf yapabiliriz. */
+        background-color: transparent; 
+    }
+    .passage {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    /* CÜMLE VE İPUCU STİLİ */
+    .sentence-container {
+        position: relative;
+        /* Her cümlenin ayrı bir blok olmasını sağlar */
+        display: block; 
+        margin-bottom: 10px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    .english-sentence {
+        font-weight: 500;
+        color: #004d99; /* İngilizce metni mavi yapalım */
+        border-bottom: 1px dashed #004d99; /* Altına kesik çizgi ekleyelim */
+        padding-bottom: 2px;
+    }
+    .translation-tooltip {
+        visibility: hidden;
+        opacity: 0;
+        width: auto;
+        min-width: 200px;
+        background-color: #5cb85c; /* Yeşil arka plan */
+        color: white;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 10px;
+        position: absolute;
+        z-index: 10;
+        top: 110%; /* Çeviriyi cümlenin hemen altında göster */
+        left: 0;
+        transform-origin: top left;
+        transition: opacity 0.3s, visibility 0.3s;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        font-weight: normal;
+        white-space: normal; /* Çevirinin sığması için metni kaydır */
+    }
+    /* Aktif/Tıklanmış durumda çeviriyi göster */
+    .sentence-container.active .translation-tooltip {
+        visibility: visible;
+        opacity: 1;
+    }
+</style>
+</head>
+<body>
+
+<div class="passage">
+    <p>
+        <span class="sentence-container" onclick="toggleTranslation(this)">
+            <span class="english-sentence">Hello! My name is Ali. I'm 25 years old and a student.</span>
+            <span class="translation-tooltip">Merhaba! Benim adım Ali. Ben 25 yaşındayım ve bir öğrenciyim.</span>
+        </span>
+    </p>
+    <p>
+        <span class="sentence-container" onclick="toggleTranslation(this)">
+            <span class="english-sentence">Health is very important to me. That's why I exercise.</span>
+            <span class="translation-tooltip">Sağlık benim için çok önemli. Bu yüzden spor yapıyorum.</span>
+        </span>
+    </p>
+    <p>
+        <span class="sentence-container" onclick="toggleTranslation(this)">
+            <span class="english-sentence">I wake up early every morning and go to the park. I run in the park.</span>
+            <span class="translation-tooltip">Her sabah erken kalkıyorum ve parka gidiyorum. Parkta koşuyorum.</span>
+        </span>
+    </p>
+    <p>
+        <span class="sentence-container" onclick="toggleTranslation(this)">
+            <span class="english-sentence">Running makes me happy and gives me energy.</span>
+            <span class="translation-tooltip">Koşmak beni mutlu ediyor ve bana enerji veriyor.</span>
+        </span>
+    </p>
+    <p>
+        <span class="sentence-container" onclick="toggleTranslation(this)">
+            <span class="english-sentence">I take swimming lessons three days a week, in the evenings. I love swimming.</span>
+            <span class="translation-tooltip">Haftada üç gün, akşamları yüzme dersleri alıyorum. Yüzmeyi çok seviyorum.</span>
+        </span>
+    </p>
+    <p>
+        <span class="sentence-container" onclick="toggleTranslation(this)">
+            <span class="english-sentence">It's good for my entire body. I feel relaxed after swimming.</span>
+            <span class="translation-tooltip">Bu, tüm vücudum için iyi. Yüzmeden sonra kendimi rahatlamış hissediyorum.</span>
+        </span>
+    </p>
+    <p>
+        <span class="sentence-container" onclick="toggleTranslation(this)">
+            <span class="english-sentence">Exercising isn't just for my body; it's also for my mind.</span>
+            <span class="translation-tooltip">Spor yapmak sadece bedenim için değil, aynı zamanda zihnim için de önemlidir.</span>
+        </span>
+    </p>
+    <p>
+        <span class="sentence-container" onclick="toggleTranslation(this)">
+            <span class="english-sentence">When I exercise, I feel less stressed and focus better on my studies.</span>
+            <span class="translation-tooltip">Spor yaptığımda daha az stresli hissediyorum ve derslerime daha iyi odaklanıyorum.</span>
+        </span>
+    </p>
+    <p>
+        <span class="sentence-container" onclick="toggleTranslation(this)">
+            <span class="english-sentence">Exercising alone isn't enough to stay healthy. It's also important to have a regular and balanced diet.</span>
+            <span class="translation-tooltip">Sadece spor yapmak sağlıklı kalmak için yeterli değil. Düzenli ve dengeli beslenmek de önemlidir.</span>
+        </span>
+    </p>
+    <p>
+        <span class="sentence-container" onclick="toggleTranslation(this)">
+            <span class="english-sentence">I drink plenty of water and eat fruits and vegetables.</span>
+            <span class="translation-tooltip">Bol su içiyorum ve meyve sebze yiyorum.</span>
+        </span>
+    </p>
+    <p>
+        <span class="sentence-container" onclick="toggleTranslation(this)">
+            <span class="english-sentence">I don't consume fast food (prepared meals) or sugary drinks.</span>
+            <span class="translation-tooltip">Fast food (hazır yiyecekler) veya şekerli içecekler tüketmiyorum.</span>
+        </span>
+    </p>
+    <p>
+        <span class="sentence-container" onclick="toggleTranslation(this)">
+            <span class="english-sentence">Would you like to be healthy too? Then get some exercise every day! Start with small steps.</span>
+            <span class="translation-tooltip">Siz de sağlıklı olmak ister misiniz? O zaman her gün biraz egzersiz yapın! Küçük adımlarla başlayın.</span>
+        </span>
+    </p>
+    <p>
+        <span class="sentence-container" onclick="toggleTranslation(this)">
+            <span class="english-sentence">For example, take the stairs instead of the elevator, or get off the bus one stop before and walk.</span>
+            <span class="translation-tooltip">Örneğin, asansör yerine merdivenleri kullanın veya otobüsten bir durak önce inin ve yürüyün.</span>
+        </span>
+    </p>
+</div>
+
+<script>
+    // Mobil cihazlarda tıklama/dokunma ile çeviriyi gösteren basit JavaScript fonksiyonu
+    function toggleTranslation(element) {
+        // Tıklanan öğenin (sentence-container) 'active' sınıfını değiştir (aç/kapa)
+        element.classList.toggle('active');
+
+        // Aynı anda açık olan diğer tüm çevirileri kapat
+        document.querySelectorAll('.sentence-container').forEach(otherElement => {
+            if (otherElement !== element && otherElement.classList.contains('active')) {
+                otherElement.classList.remove('active');
+            }
+        });
+    }
+
+    // Vücudun herhangi bir yerine tıklanırsa açık olan çevirileri kapat
+    document.body.addEventListener('click', function(e) {
+        if (!e.target.closest('.sentence-container')) {
+            document.querySelectorAll('.sentence-container').forEach(container => {
+                container.classList.remove('active');
+            });
+        }
+    });
+</script>
+
+</body>
+</html>
