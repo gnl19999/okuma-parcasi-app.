@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>İnteraktif Okuma Parçası</title>
+<title>İnteraktif Okuma ve Kelimeler</title>
 <style>
-    /* GENEL STİLLEME */
+    /* GENEL VE METİN STİLİ */
     body {
         font-family: Arial, sans-serif;
         padding: 20px;
         line-height: 1.6;
         color: #333;
-        /* Jotform arkaplanıyla uyum için arka planı şeffaf yapabiliriz. */
-        background-color: transparent; 
+        background-color: white; 
+        position: relative; /* Sidebar için gereklidir */
+        overflow-x: hidden; /* Sidebar açılınca kaydırma çubuğunu engeller */
     }
     .passage {
         max-width: 600px;
         margin: 0 auto;
     }
     
-    /* CÜMLE VE İPUCU STİLİ */
+    /* CÜMLE VE İPUCU STİLİ (Önceki Fonksiyon) */
     .sentence-container {
         position: relative;
-        /* Her cümlenin ayrı bir blok olmasını sağlar */
         display: block; 
         margin-bottom: 10px;
         cursor: pointer;
@@ -28,8 +28,8 @@
     }
     .english-sentence {
         font-weight: 500;
-        color: #004d99; /* İngilizce metni mavi yapalım */
-        border-bottom: 1px dashed #004d99; /* Altına kesik çizgi ekleyelim */
+        color: #004d99; 
+        border-bottom: 1px dashed #004d99; 
         padding-bottom: 2px;
     }
     .translation-tooltip {
@@ -37,29 +37,99 @@
         opacity: 0;
         width: auto;
         min-width: 200px;
-        background-color: #5cb85c; /* Yeşil arka plan */
+        background-color: #5cb85c; 
         color: white;
         text-align: center;
         border-radius: 6px;
         padding: 5px 10px;
         position: absolute;
         z-index: 10;
-        top: 110%; /* Çeviriyi cümlenin hemen altında göster */
+        top: 110%; 
         left: 0;
         transform-origin: top left;
         transition: opacity 0.3s, visibility 0.3s;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         font-weight: normal;
-        white-space: normal; /* Çevirinin sığması için metni kaydır */
+        white-space: normal;
     }
-    /* Aktif/Tıklanmış durumda çeviriyi göster */
     .sentence-container.active .translation-tooltip {
         visibility: visible;
         opacity: 1;
     }
+
+    /* KELİMELER PANELİ (SIDEBAR) STİLİ */
+    .words-sidebar {
+        height: 100%; /* Tam ekran yüksekliği */
+        width: 300px; /* Panel genişliği */
+        position: fixed; /* Sabit konum */
+        z-index: 20; /* Her şeyin üstünde */
+        top: 0;
+        right: -300px; /* Başlangıçta ekran dışına gizlenir */
+        background-color: #f1f1f1;
+        overflow-y: auto;
+        padding: 20px;
+        transition: right 0.5s; /* Yumuşak kayma efekti */
+        box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+    }
+    .words-sidebar.open {
+        right: 0; /* Açıkken ekrana kayar */
+    }
+    .sidebar-header {
+        font-size: 20px;
+        font-weight: bold;
+        color: #004d99;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #004d99;
+        padding-bottom: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .close-btn {
+        font-size: 30px;
+        font-weight: bold;
+        color: #aaa;
+        cursor: pointer;
+    }
+    .close-btn:hover {
+        color: #333;
+    }
+    .word-item {
+        margin-bottom: 10px;
+        padding: 5px 0;
+        border-bottom: 1px dotted #ccc;
+    }
+    .english-word {
+        font-weight: bold;
+        color: #333;
+    }
+    .turkish-translation {
+        font-style: italic;
+        color: #555;
+        margin-left: 10px;
+    }
+
+    /* BUTON STİLİ */
+    .word-button {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: #007bff; /* Mavi renk */
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        border-radius: 5px;
+        z-index: 30; /* Sidebar'ın da üstünde */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
 </style>
 </head>
 <body>
+
+<button class="word-button" onclick="toggleWordsSidebar()">W | Kelimeler</button>
 
 <div class="passage">
     <p>
@@ -142,8 +212,69 @@
     </p>
 </div>
 
+<div id="wordsSidebar" class="words-sidebar">
+    <div class="sidebar-header">
+        Kelime Listesi
+        <span class="close-btn" onclick="toggleWordsSidebar()">&times;</span>
+    </div>
+
+    <div class="word-item">
+        <span class="english-word">exercise</span> 
+        <span class="turkish-translation">egzersiz yapmak, spor yapmak</span>
+    </div>
+    <div class="word-item">
+        <span class="english-word">wake up</span> 
+        <span class="turkish-translation">uyanmak</span>
+    </div>
+    <div class="word-item">
+        <span class="english-word">park</span> 
+        <span class="turkish-translation">park</span>
+    </div>
+    <div class="word-item">
+        <span class="english-word">run</span> 
+        <span class="turkish-translation">koşmak</span>
+    </div>
+    <div class="word-item">
+        <span class="english-word">energy</span> 
+        <span class="turkish-translation">enerji</span>
+    </div>
+    <div class="word-item">
+        <span class="english-word">swimming lessons</span> 
+        <span class="turkish-translation">yüzme dersleri</span>
+    </div>
+    <div class="word-item">
+        <span class="english-word">relaxed</span> 
+        <span class="turkish-translation">rahatlamış</span>
+    </div>
+    <div class="word-item">
+        <span class="english-word">mind</span> 
+        <span class="turkish-translation">zihin, akıl</span>
+    </div>
+    <div class="word-item">
+        <span class="english-word">stressed</span> 
+        <span class="turkish-translation">stresli</span>
+    </div>
+    <div class="word-item">
+        <span class="english-word">focus</span> 
+        <span class="turkish-translation">odaklanmak</span>
+    </div>
+    <div class="word-item">
+        <span class="english-word">balanced diet</span> 
+        <span class="turkish-translation">dengeli beslenme</span>
+    </div>
+    <div class="word-item">
+        <span class="english-word">consume</span> 
+        <span class="turkish-translation">tüketmek</span>
+    </div>
+    <div class="word-item">
+        <span class="english-word">fast food</span> 
+        <span class="turkish-translation">hazır yiyecek</span>
+    </div>
+</div>
+
+
 <script>
-    // Mobil cihazlarda tıklama/dokunma ile çeviriyi gösteren basit JavaScript fonksiyonu
+    // 1. Cümle Çevirisini Açıp Kapatma Fonksiyonu (Eskisi)
     function toggleTranslation(element) {
         // Tıklanan öğenin (sentence-container) 'active' sınıfını değiştir (aç/kapa)
         element.classList.toggle('active');
@@ -158,12 +289,18 @@
 
     // Vücudun herhangi bir yerine tıklanırsa açık olan çevirileri kapat
     document.body.addEventListener('click', function(e) {
-        if (!e.target.closest('.sentence-container')) {
+        if (!e.target.closest('.sentence-container') && !e.target.closest('.word-button') && !e.target.closest('.words-sidebar')) {
             document.querySelectorAll('.sentence-container').forEach(container => {
                 container.classList.remove('active');
             });
         }
     });
+
+    // 2. Kelime Panelini Açıp Kapatma Fonksiyonu (Yeni)
+    function toggleWordsSidebar() {
+        var sidebar = document.getElementById("wordsSidebar");
+        sidebar.classList.toggle("open");
+    }
 </script>
 
 </body>
