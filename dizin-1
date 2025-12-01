@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Turtles (A1 Reading)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 15px; /* Daha az padding ile daha fazla alan */
+            max-width: 100%; /* Sayfa genişliğini %100 kullan */
+            margin: 0 auto;
+            line-height: 1.6;
+            box-sizing: border-box; /* Padding'in genişliğe dahil edilmesi */
+        }
+        h2 {
+            color: #00796b;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 5px;
+        }
+        .reading-section {
+            margin-bottom: 30px;
+        }
+        .sentence-group {
+            margin-bottom: 15px; 
+            cursor: pointer; 
+            padding: 5px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .sentence-group:hover {
+            background-color: #f0f0f0;
+        }
+        .english-sentence {
+            display: block;
+            font-weight: bold;
+            color: #333;
+        }
+        .vibrant-word {
+            color: #00796b; 
+            font-weight: bold;
+        }
+        .translation {
+            display: none; 
+            color: #00796b; 
+            font-style: italic;
+            margin-top: 5px;
+            padding-left: 10px;
+            border-left: 3px solid #00796b;
+        }
+        .active-translation {
+            display: block; 
+        }
+        
+        /* Kelime Listesi Stilleri (Mobil Uyumlu) */
+        .vocabulary-section {
+            /* Tablonun taşmasını engellemek için taşıyıcı ekleyin */
+            overflow-x: auto;
+        }
+        table {
+            width: 100%; /* Tablonun %100 genişlik kullanması */
+            min-width: 300px; /* Çok küçük ekranlarda bile okunabilirliği koru */
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reading-section">
+        <h2>🐢 Green Turtles (A1 Reading)</h2>
+
+        <div class="sentence-group" onclick="toggleTranslation(this)">
+            <span class="english-sentence">Green turtles are <span class="vibrant-word">big</span> animals. They are a kind of sea turtle. Their name is "Green Turtle," but they are often brown or yellow. They live in the <span class="vibrant-word">ocean</span>.</span>
+            <p class="translation">Yeşil kaplumbağalar büyük hayvanlardır. Onlar bir tür deniz kaplumbağasıdır. İsimleri "Yeşil Kaplumbağa"dır, ancak genellikle kahverengi veya sarıdırlar. Okyanusta yaşarlar.</p>
+        </div>
+
+        <div class="sentence-group" onclick="toggleTranslation(this)">
+            <span class="english-sentence">Green turtles like <span class="vibrant-word">warm</span> water. They live in warm places like near beaches. They swim very <span class="vibrant-word">fast</span>. They use their strong legs (flippers) to <span class="vibrant-word">swim</span>.</span>
+            <p class="translation">Yeşil kaplumbağalar ılık suyu sever. Plajlara yakın ılık yerlerde yaşarlar. Çok hızlı yüzerler. Yüzmek için güçlü bacaklarını (yüzgeçlerini) kullanırlar.</p>
+        </div>
+        
+        <div class="sentence-group" onclick="toggleTranslation(this)">
+            <span class="english-sentence">A small green turtle is very small. But when they are <span class="vibrant-word">adults</span>, they are big! Some can be 1 meter long. They can live for a very long time, maybe 80 years!</span>
+            <p class="translation">Küçük bir yeşil kaplumbağa çok küçüktür. Ama yetişkin olduklarında büyüktürler! Bazıları 1 metre uzunluğunda olabilir. Çok uzun yaşayabilirler, belki 80 yıl!</p>
+        </div>
+
+        <div class="sentence-group" onclick="toggleTranslation(this)">
+            <span class="english-sentence">What do they <span class="vibrant-word">eat</span>? When they are young, they eat small sea animals. But when they are big, they mainly eat <span class="vibrant-word">plants</span> in the sea, like seaweed. They are mostly herbivores.</span>
+            <p class="translation">Ne yerler? Genç olduklarında, küçük deniz hayvanlarını yerler. Ama büyüdüklerinde, esas olarak deniz yosunu gibi denizdeki bitkileri yerler. Çoğunlukla otçuldurlar.</p>
+        </div>
+        
+        <div class="sentence-group" onclick="toggleTranslation(this)">
+            <span class="english-sentence">Green turtles are <span class="vibrant-word">important</span>. We must help them. Many turtles are in <span class="vibrant-word">danger</span>. People must keep the beaches <span class="vibrant-word">clean</span> so turtles can make their nests and lay their eggs there.</span>
+            <p class="translation">Yeşil kaplumbağalar önemlidir. Onlara yardım etmeliyiz. Birçok kaplumbağa tehlikededir. İnsanlar, kaplumbağaların yuvalarını yapıp yumurtlayabilmeleri için plajları temiz tutmalıdır.</p>
+        </div>
+        
+    </div>
+
+    <div class="vocabulary-section">
+        <h3>📝 Vocabulary (Kelime Listesi)</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>English Word</th>
+                    <th>Turkish Meaning</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Big</td><td>Büyük</td></tr>
+                <tr><td>Ocean</td><td>Okyanus, Deniz</td></tr>
+                <tr><td>Warm</td><td>Ilık, Sıcak</td></tr>
+                <tr><td>Swim</td><td>Yüzmek</td></tr>
+                <tr><td>Fast</td><td>Hızlı</td></tr>
+                <tr><td>Adults</td><td>Yetişkinler</td></tr>
+                <tr><td>Eat</td><td>Yemek</td></tr>
+                <tr><td>Plants</td><td>Bitkiler</td></tr>
+                <tr><td>Important</td><td>Önemli</td></tr>
+                <tr><td>Danger</td><td>Tehlike</td></tr>
+                <tr><td>Clean</td><td>Temiz</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function toggleTranslation(element) {
+            var translation = element.querySelector('.translation');
+            
+            // Eğer çeviri görünürse gizle, gizliyse göster.
+            if (translation.classList.contains('active-translation')) {
+                translation.classList.remove('active-translation');
+            } else {
+                translation.classList.add('active-translation');
+            }
+        }
+    </script>
+
+</body>
+</html>
