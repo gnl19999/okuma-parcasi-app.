@@ -1,267 +1,168 @@
+
 <!DOCTYPE html>
 <html>
 <head>
-<title>İnteraktif Okuma ve Kelimeler</title>
+<title>İnteraktif Okuma Parçası</title>
 <style>
-    /* GENEL VE METİN STİLİ */
-    body {
-        font-family: Arial, sans-serif;
-        padding: 20px;
-        line-height: 1.6;
-        color: #333;
-        background-color: white; 
-        position: relative; /* Sidebar için gereklidir */
-        overflow-x: hidden; /* Sidebar açılınca kaydırma çubuğunu engeller */
-    }
-    .passage {
-        max-width: 600px;
-        margin: 0 auto;
-    }
-    
-    /* CÜMLE VE İPUCU STİLİ */
-    .sentence-container {
-        position: relative;
-        display: block; 
-        margin-bottom: 10px;
-        cursor: pointer;
-        font-size: 16px;
-    }
-    .english-sentence {
-        font-weight: 500;
-        color: #004d99; 
-        border-bottom: 1px dashed #004d99; 
-        padding-bottom: 2px;
-    }
-    .translation-tooltip {
-        visibility: hidden;
-        opacity: 0;
-        width: auto;
-        min-width: 200px;
-        background-color: #5cb85c; 
-        color: white;
-        text-align: center;
-        border-radius: 6px;
-        padding: 5px 10px;
-        position: absolute;
-        z-index: 10;
-        top: 110%; 
-        left: 0;
-        transform-origin: top left;
-        transition: opacity 0.3s, visibility 0.3s;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        font-weight: normal;
-        white-space: normal;
-    }
-    .sentence-container.active .translation-tooltip {
-        visibility: visible;
-        opacity: 1;
-    }
-
-    /* KELİMELER PANELİ (SIDEBAR) STİLİ */
-    .words-sidebar {
-        height: 100%; /* Tam ekran yüksekliği */
-        width: 300px; /* Panel genişliği */
-        position: fixed; /* Sabit konum */
-        z-index: 20; /* Her şeyin üstünde */
-        top: 0;
-        right: -300px; /* Başlangıçta ekran dışına gizlenir */
-        background-color: #f1f1f1;
-        overflow-y: auto;
-        padding: 20px;
-        transition: right 0.5s; /* Yumuşak kayma efekti */
-        box-shadow: -5px 0 15px rgba(0,0,0,0.1);
-    }
-    .words-sidebar.open {
-        right: 0; /* Açıkken ekrana kayar */
-    }
-    .sidebar-header {
-        font-size: 20px;
-        font-weight: bold;
-        color: #004d99;
-        margin-bottom: 15px;
-        border-bottom: 2px solid #004d99;
-        padding-bottom: 5px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .close-btn {
-        font-size: 30px;
-        font-weight: bold;
-        color: #aaa;
-        cursor: pointer;
-    }
-    .close-btn:hover {
-        color: #333;
-    }
-    .word-item {
-        margin-bottom: 10px;
-        padding: 5px 0;
-        border-bottom: 1px dotted #ccc;
-    }
-    .english-word {
-        font-weight: bold;
-        color: #333;
-    }
-    .turkish-translation {
-        font-style: italic;
-        color: #555;
-        margin-left: 10px;
-    }
-
-    /* BUTON STİLİ */
-    .word-button {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background-color: #007bff; /* Mavi renk */
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        font-size: 18px;
-        font-weight: bold;
-        cursor: pointer;
-        border-radius: 5px;
-        z-index: 30; /* Sidebar'ın da üstünde */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
+    /* GENEL STİLLEME */
+    body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        line-height: 1.6;
+        color: #333;
+        background-color: transparent; 
+    }
+    .passage {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    /* CÜMLE VE İPUCU STİLİ */
+    .sentence-container {
+        position: relative;
+        display: block; 
+        margin-bottom: 10px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    .english-sentence {
+        font-weight: 500;
+        color: #004d99; 
+        border-bottom: 1px dashed #004d99; 
+        padding-bottom: 2px;
+    }
+    .translation-tooltip {
+        visibility: hidden;
+        opacity: 0;
+        width: auto;
+        min-width: 200px;
+        background-color: #5cb85c; 
+        color: white;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 10px;
+        position: absolute;
+        z-index: 10;
+        top: 110%; 
+        left: 0;
+        transform-origin: top left;
+        transition: opacity 0.3s, visibility 0.3s;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        font-weight: normal;
+        white-space: normal;
+    }
+    /* Aktif/Tıklanmış durumda çeviriyi göster */
+    .sentence-container.active .translation-tooltip {
+        visibility: visible;
+        opacity: 1;
+    }
 </style>
 </head>
 <body>
 
-<button class="word-button" onclick="toggleWordsSidebar()">W | Kelimeler</button>
-
 <div class="passage">
-    <h2>🐢 Green Turtles (A1 Reading)</h2>
     <p>
-        <span class="sentence-container" onclick="toggleTranslation(this)">
-            <span class="english-sentence">Green turtles are big animals. They are a kind of sea turtle. Their name is "Green Turtle," but they are often brown or yellow. They live in the ocean.</span>
-            <span class="translation-tooltip">Yeşil kaplumbağalar büyük hayvanlardır. Onlar bir tür deniz kaplumbağasıdır. İsimleri "Yeşil Kaplumbağa"dır, ancak genellikle kahverengi veya sarıdırlar. Okyanusta yaşarlar.</span>
-        </span>
-    </p>
+        <span class="sentence-container" onclick="toggleTranslation(this)">
+            <span class="english-sentence">Hello! My name is Ali. I'm 25 years old and a student.</span>
+            <span class="translation-tooltip">Merhaba! Benim adım Ali. Ben 25 yaşındayım ve bir öğrenciyim.</span>
+        </span>
+    </p>
     <p>
-        <span class="sentence-container" onclick="toggleTranslation(this)">
-            <span class="english-sentence">Green turtles like warm water. They live in warm places like near beaches. They swim very fast. They use their strong legs (flippers) to swim.</span>
-            <span class="translation-tooltip">Yeşil kaplumbağalar ılık suyu sever. Plajlara yakın ılık yerlerde yaşarlar. Çok hızlı yüzerler. Yüzmek için güçlü bacaklarını (yüzgeçlerini) kullanırlar.</span>
-        </span>
-    </p>
+        <span class="sentence-container" onclick="toggleTranslation(this)">
+            <span class="english-sentence">Health is very important to me. That's why I exercise.</span>
+            <span class="translation-tooltip">Sağlık benim için çok önemli. Bu yüzden spor yapıyorum.</span>
+        </span>
+    </p>
     <p>
-        <span class="sentence-container" onclick="toggleTranslation(this)">
-            <span class="english-sentence">A small green turtle is very small. But when they are adults, they are big! Some can be 1 meter long. They can live for a very long time, maybe 80 years!</span>
-            <span class="translation-tooltip">Küçük bir yeşil kaplumbağa çok küçüktür. Ama yetişkin olduklarında büyüktürler! Bazıları 1 metre uzunluğunda olabilir. Çok uzun yaşayabilirler, belki 80 yıl!</span>
-        </span>
-    </p>
+        <span class="sentence-container" onclick="toggleTranslation(this)">
+            <span class="english-sentence">I wake up early every morning and go to the park. I run in the park.</span>
+            <span class="translation-tooltip">Her sabah erken kalkıyorum ve parka gidiyorum. Parkta koşuyorum.</span>
+        </span>
+    </p>
     <p>
-        <span class="sentence-container" onclick="toggleTranslation(this)">
-            <span class="english-sentence">What do they eat? When they are young, they eat small sea animals. But when they are big, they mainly eat plants in the sea, like seaweed. They are mostly herbivores.</span>
-            <span class="translation-tooltip">Ne yerler? Genç olduklarında, küçük deniz hayvanlarını yerler. Ama büyüdüklerinde, esas olarak deniz yosunu gibi denizdeki bitkileri yerler. Çoğunlukla otçuldurlar.</span>
-        </span>
-    </p>
+        <span class="sentence-container" onclick="toggleTranslation(this)">
+            <span class="english-sentence">Running makes me happy and gives me energy.</span>
+            <span class="translation-tooltip">Koşmak beni mutlu ediyor ve bana enerji veriyor.</span>
+        </span>
+    </p>
     <p>
-        <span class="sentence-container" onclick="toggleTranslation(this)">
-            <span class="english-sentence">Green turtles are important. We must help them. Many turtles are in danger. People must keep the beaches clean so turtles can make their nests and lay their eggs there.</span>
-            <span class="translation-tooltip">Yeşil kaplumbağalar önemlidir. Onlara yardım etmeliyiz. Birçok kaplumbağa tehlikededir. İnsanlar, kaplumbağaların yuvalarını yapıp yumurtlayabilmeleri için plajları temiz tutmalıdır.</span>
-        </span>
-    </p>
+        <span class="sentence-container" onclick="toggleTranslation(this)">
+            <span class="english-sentence">I take swimming lessons three days a week, in the evenings. I love swimming.</span>
+            <span class="translation-tooltip">Haftada üç gün, akşamları yüzme dersleri alıyorum. Yüzmeyi çok seviyorum.</span>
+        </span>
+    </p>
+    <p>
+        <span class="sentence-container" onclick="toggleTranslation(this)">
+            <span class="english-sentence">It's good for my entire body. I feel relaxed after swimming.</span>
+            <span class="translation-tooltip">Bu, tüm vücudum için iyi. Yüzmeden sonra kendimi rahatlamış hissediyorum.</span>
+        </span>
+    </p>
+    <p>
+        <span class="sentence-container" onclick="toggleTranslation(this)">
+            <span class="english-sentence">Exercising isn't just for my body; it's also for my mind.</span>
+            <span class="translation-tooltip">Spor yapmak sadece bedenim için değil, aynı zamanda zihnim için de önemlidir.</span>
+        </span>
+    </p>
+    <p>
+        <span class="sentence-container" onclick="toggleTranslation(this)">
+            <span class="english-sentence">When I exercise, I feel less stressed and focus better on my studies.</span>
+            <span class="translation-tooltip">Spor yaptığımda daha az stresli hissediyorum ve derslerime daha iyi odaklanıyorum.</span>
+        </span>
+    </p>
+    <p>
+        <span class="sentence-container" onclick="toggleTranslation(this)">
+            <span class="english-sentence">Exercising alone isn't enough to stay healthy. It's also important to have a regular and balanced diet.</span>
+            <span class="translation-tooltip">Sadece spor yapmak sağlıklı kalmak için yeterli değil. Düzenli ve dengeli beslenmek de önemlidir.</span>
+        </span>
+    </p>
+    <p>
+        <span class="sentence-container" onclick="toggleTranslation(this)">
+            <span class="english-sentence">I drink plenty of water and eat fruits and vegetables.</span>
+            <span class="translation-tooltip">Bol su içiyorum ve meyve sebze yiyorum.</span>
+        </span>
+    </p>
+    <p>
+        <span class="sentence-container" onclick="toggleTranslation(this)">
+            <span class="english-sentence">I don't consume fast food (prepared meals) or sugary drinks.</span>
+            <span class="translation-tooltip">Fast food (hazır yiyecekler) veya şekerli içecekler tüketmiyorum.</span>
+        </span>
+    </p>
+    <p>
+        <span class="sentence-container" onclick="toggleTranslation(this)">
+            <span class="english-sentence">Would you like to be healthy too? Then get some exercise every day! Start with small steps.</span>
+            <span class="translation-tooltip">Siz de sağlıklı olmak ister misiniz? O zaman her gün biraz egzersiz yapın! Küçük adımlarla başlayın.</span>
+        </span>
+    </p>
+    <p>
+        <span class="sentence-container" onclick="toggleTranslation(this)">
+            <span class="english-sentence">For example, take the stairs instead of the elevator, or get off the bus one stop before and walk.</span>
+            <span class="translation-tooltip">Örneğin, asansör yerine merdivenleri kullanın veya otobüsten bir durak önce inin ve yürüyün.</span>
+        </span>
+    </p>
 </div>
-
-<div id="wordsSidebar" class="words-sidebar">
-    <div class="sidebar-header">
-        Kelime Listesi
-        <span class="close-btn" onclick="toggleWordsSidebar()">&times;</span>
-    </div>
-
-    <div class="word-item">
-        <span class="english-word">Big</span> 
-        <span class="turkish-translation">Büyük</span>
-    </div>
-    <div class="word-item">
-        <span class="english-word">Ocean</span> 
-        <span class="turkish-translation">Okyanus, Deniz</span>
-    </div>
-    <div class="word-item">
-        <span class="english-word">Warm</span> 
-        <span class="turkish-translation">Ilık, Sıcak</span>
-    </div>
-    <div class="word-item">
-        <span class="english-word">Swim</span> 
-        <span class="turkish-translation">Yüzmek</span>
-    </div>
-    <div class="word-item">
-        <span class="english-word">Fast</span> 
-        <span class="turkish-translation">Hızlı</span>
-    </div>
-    <div class="word-item">
-        <span class="english-word">Adults</span> 
-        <span class="turkish-translation">Yetişkinler</span>
-    </div>
-    <div class="word-item">
-        <span class="english-word">Eat</span> 
-        <span class="turkish-translation">Yemek</span>
-    </div>
-    <div class="word-item">
-        <span class="english-word">Plants</span> 
-        <span class="turkish-translation">Bitkiler</span>
-    </div>
-    <div class="word-item">
-        <span class="english-word">Important</span> 
-        <span class="turkish-translation">Önemli</span>
-    </div>
-    <div class="word-item">
-        <span class="english-word">Danger</span> 
-        <span class="turkish-translation">Tehlike</span>
-    </div>
-    <div class="word-item">
-        <span class="english-word">Clean</span> 
-        <span class="turkish-translation">Temiz</span>
-    </div>
-    <div class="word-item">
-        <span class="english-word">Sea turtle</span> 
-        <span class="turkish-translation">Deniz kaplumbağası</span>
-    </div>
-    <div class="word-item">
-        <span class="english-word">Flippers</span> 
-        <span class="turkish-translation">Yüzgeçler (kaplumbağa)</span>
-    </div>
-    <div class="word-item">
-        <span class="english-word">Seaweed</span> 
-        <span class="turkish-translation">Deniz yosunu</span>
-    </div>
-    <div class="word-item">
-        <span class="english-word">Nests / Eggs</span> 
-        <span class="turkish-translation">Yuvalar / Yumurtalar</span>
-    </div>
-</div>
-
 
 <script>
-    // 1. Cümle Çevirisini Açıp Kapatma Fonksiyonu
-    function toggleTranslation(element) {
-        // Tıklanan öğenin (sentence-container) 'active' sınıfını değiştir (aç/kapa)
-        element.classList.toggle('active');
+    // Mobil cihazlarda tıklama/dokunma ile çeviriyi gösteren basit JavaScript fonksiyonu
+    function toggleTranslation(element) {
+        // Tıklanan öğenin (sentence-container) 'active' sınıfını değiştir (aç/kapa)
+        element.classList.toggle('active');
 
-        // Aynı anda açık olan diğer tüm çevirileri kapat
-        document.querySelectorAll('.sentence-container').forEach(otherElement => {
-            if (otherElement !== element && otherElement.classList.contains('active')) {
-                otherElement.classList.remove('active');
-            }
-        });
-    }
+        // Aynı anda açık olan diğer tüm çevirileri kapat
+        document.querySelectorAll('.sentence-container').forEach(otherElement => {
+            if (otherElement !== element && otherElement.classList.contains('active')) {
+                otherElement.classList.remove('active');
+            }
+        });
+    }
 
-    // Vücudun herhangi bir yerine tıklanırsa açık olan çevirileri kapat
-    document.body.addEventListener('click', function(e) {
-        if (!e.target.closest('.sentence-container') && !e.target.closest('.word-button') && !e.target.closest('.words-sidebar')) {
-            document.querySelectorAll('.sentence-container').forEach(container => {
-                container.classList.remove('active');
-            });
-        }
-    });
-
-    // 2. Kelime Panelini Açıp Kapatma Fonksiyonu
-    function toggleWordsSidebar() {
-        var sidebar = document.getElementById("wordsSidebar");
-        sidebar.classList.toggle("open");
-    }
+    // Vücudun herhangi bir yerine tıklanırsa açık olan çevirileri kapat
+    document.body.addEventListener('click', function(e) {
+        if (!e.target.closest('.sentence-container')) {
+            document.querySelectorAll('.sentence-container').forEach(container => {
+                container.classList.remove('active');
+            });
+        }
+    });
 </script>
 
 </body>
